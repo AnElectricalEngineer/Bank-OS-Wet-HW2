@@ -1,4 +1,5 @@
-//
-// Created by Joshua on 24/05/2021.
-//
+int main()
+{
+    return 0;
+}
 
