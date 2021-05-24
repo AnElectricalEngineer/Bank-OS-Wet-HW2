@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o -o OS_Wet_HW2 
