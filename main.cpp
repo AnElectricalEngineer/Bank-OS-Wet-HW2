@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     for(int i = 0; i < N; i++)
     {
         threadCreateSuccess = pthread_create(&ATM_threads[i], nullptr, atmFunc,
-                                       (void*)&ATM_infos[i]);
+                                       (void*)&ATM_infos.at(i));
         if(threadCreateSuccess)
         {
             perror("Error creating thread"); //TODO check that this is what
