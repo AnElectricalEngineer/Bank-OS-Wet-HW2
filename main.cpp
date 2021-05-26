@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
     for(int i = 2; i < argc; i++)
     {
         const char* pathName = argv[i];
-        int fd = open(pathName, O_RDONLY);
+        int fd = open(pathName, O_RDONLY); //TODO close all files at end!
 
         // If opening file failed
         if(fd == -1)
