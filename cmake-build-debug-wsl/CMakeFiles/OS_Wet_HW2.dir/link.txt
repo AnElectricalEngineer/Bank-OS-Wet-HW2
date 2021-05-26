@@ -1,1 +1,1 @@
-/usr/bin/c++ -g CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o -o OS_Wet_HW2 
+/usr/bin/c++ -pthread -g CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o CMakeFiles/OS_Wet_HW2.dir/account.cpp.o CMakeFiles/OS_Wet_HW2.dir/main.cpp.o -o OS_Wet_HW2 

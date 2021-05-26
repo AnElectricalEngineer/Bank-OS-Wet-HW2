@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/OS_Wet_HW2.dir/account.cpp.o"
+  "CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o"
   "CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o"
+  "CMakeFiles/OS_Wet_HW2.dir/main.cpp.o"
   "OS_Wet_HW2"
   "OS_Wet_HW2.pdb"
 )

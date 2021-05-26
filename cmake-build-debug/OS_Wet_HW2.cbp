@@ -80,7 +80,25 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.cpp">
+			<Option target="OS_Wet_HW2"/>
+		</Unit>
+		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h">
+			<Option target="OS_Wet_HW2"/>
+		</Unit>
+		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp">
+			<Option target="OS_Wet_HW2"/>
+		</Unit>
+		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h">
+			<Option target="OS_Wet_HW2"/>
+		</Unit>
 		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.cpp">
+			<Option target="OS_Wet_HW2"/>
+		</Unit>
+		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h">
+			<Option target="OS_Wet_HW2"/>
+		</Unit>
+		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp">
 			<Option target="OS_Wet_HW2"/>
 		</Unit>
 		<Unit filename="D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/CMakeLists.txt">

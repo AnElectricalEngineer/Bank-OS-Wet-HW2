@@ -1,5 +1,2 @@
-int main()
-{
-    return 0;
-}
+#include "bank.h"
 

@@ -4,7 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.cpp" "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug/CMakeFiles/OS_Wet_HW2.dir/account.cpp.obj"
+  "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp" "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug/CMakeFiles/OS_Wet_HW2.dir/atm.cpp.obj"
   "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.cpp" "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug/CMakeFiles/OS_Wet_HW2.dir/bank.cpp.obj"
+  "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp" "D:/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug/CMakeFiles/OS_Wet_HW2.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

@@ -141,6 +141,60 @@ OS_Wet_HW2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/build
 .PHONY : OS_Wet_HW2/fast
 
+account.obj: account.cpp.obj
+
+.PHONY : account.obj
+
+# target to build an object file
+account.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/account.cpp.obj
+.PHONY : account.cpp.obj
+
+account.i: account.cpp.i
+
+.PHONY : account.i
+
+# target to preprocess a source file
+account.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/account.cpp.i
+.PHONY : account.cpp.i
+
+account.s: account.cpp.s
+
+.PHONY : account.s
+
+# target to generate assembly for a file
+account.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/account.cpp.s
+.PHONY : account.cpp.s
+
+atm.obj: atm.cpp.obj
+
+.PHONY : atm.obj
+
+# target to build an object file
+atm.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/atm.cpp.obj
+.PHONY : atm.cpp.obj
+
+atm.i: atm.cpp.i
+
+.PHONY : atm.i
+
+# target to preprocess a source file
+atm.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/atm.cpp.i
+.PHONY : atm.cpp.i
+
+atm.s: atm.cpp.s
+
+.PHONY : atm.s
+
+# target to generate assembly for a file
+atm.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/atm.cpp.s
+.PHONY : atm.cpp.s
+
 bank.obj: bank.cpp.obj
 
 .PHONY : bank.obj
@@ -168,6 +222,33 @@ bank.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/bank.cpp.s
 .PHONY : bank.cpp.s
 
+main.obj: main.cpp.obj
+
+.PHONY : main.obj
+
+# target to build an object file
+main.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/main.cpp.obj
+.PHONY : main.cpp.obj
+
+main.i: main.cpp.i
+
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\OS_Wet_HW2.dir\build.make CMakeFiles/OS_Wet_HW2.dir/main.cpp.s
+.PHONY : main.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -177,9 +258,18 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... OS_Wet_HW2
+	@echo ... account.obj
+	@echo ... account.i
+	@echo ... account.s
+	@echo ... atm.obj
+	@echo ... atm.i
+	@echo ... atm.s
 	@echo ... bank.obj
 	@echo ... bank.i
 	@echo ... bank.s
+	@echo ... main.obj
+	@echo ... main.i
+	@echo ... main.s
 .PHONY : help
 
 

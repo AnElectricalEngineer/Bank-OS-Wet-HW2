@@ -89,17 +89,62 @@ CMakeFiles/OS_Wet_HW2.dir/bank.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OS_Wet_HW2.dir/bank.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.cpp" -o CMakeFiles/OS_Wet_HW2.dir/bank.cpp.s
 
+CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: CMakeFiles/OS_Wet_HW2.dir/flags.make
+CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../atm.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug-wsl/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o -c "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp"
+
+CMakeFiles/OS_Wet_HW2.dir/atm.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OS_Wet_HW2.dir/atm.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp" > CMakeFiles/OS_Wet_HW2.dir/atm.cpp.i
+
+CMakeFiles/OS_Wet_HW2.dir/atm.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OS_Wet_HW2.dir/atm.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp" -o CMakeFiles/OS_Wet_HW2.dir/atm.cpp.s
+
+CMakeFiles/OS_Wet_HW2.dir/account.cpp.o: CMakeFiles/OS_Wet_HW2.dir/flags.make
+CMakeFiles/OS_Wet_HW2.dir/account.cpp.o: ../account.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug-wsl/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/OS_Wet_HW2.dir/account.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OS_Wet_HW2.dir/account.cpp.o -c "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.cpp"
+
+CMakeFiles/OS_Wet_HW2.dir/account.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OS_Wet_HW2.dir/account.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.cpp" > CMakeFiles/OS_Wet_HW2.dir/account.cpp.i
+
+CMakeFiles/OS_Wet_HW2.dir/account.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OS_Wet_HW2.dir/account.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.cpp" -o CMakeFiles/OS_Wet_HW2.dir/account.cpp.s
+
+CMakeFiles/OS_Wet_HW2.dir/main.cpp.o: CMakeFiles/OS_Wet_HW2.dir/flags.make
+CMakeFiles/OS_Wet_HW2.dir/main.cpp.o: ../main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug-wsl/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/OS_Wet_HW2.dir/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/OS_Wet_HW2.dir/main.cpp.o -c "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp"
+
+CMakeFiles/OS_Wet_HW2.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/OS_Wet_HW2.dir/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp" > CMakeFiles/OS_Wet_HW2.dir/main.cpp.i
+
+CMakeFiles/OS_Wet_HW2.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/OS_Wet_HW2.dir/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp" -o CMakeFiles/OS_Wet_HW2.dir/main.cpp.s
+
 # Object files for target OS_Wet_HW2
 OS_Wet_HW2_OBJECTS = \
-"CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o"
+"CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o" \
+"CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o" \
+"CMakeFiles/OS_Wet_HW2.dir/account.cpp.o" \
+"CMakeFiles/OS_Wet_HW2.dir/main.cpp.o"
 
 # External object files for target OS_Wet_HW2
 OS_Wet_HW2_EXTERNAL_OBJECTS =
 
 OS_Wet_HW2: CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o
+OS_Wet_HW2: CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o
+OS_Wet_HW2: CMakeFiles/OS_Wet_HW2.dir/account.cpp.o
+OS_Wet_HW2: CMakeFiles/OS_Wet_HW2.dir/main.cpp.o
 OS_Wet_HW2: CMakeFiles/OS_Wet_HW2.dir/build.make
 OS_Wet_HW2: CMakeFiles/OS_Wet_HW2.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug-wsl/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable OS_Wet_HW2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/cmake-build-debug-wsl/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable OS_Wet_HW2"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/OS_Wet_HW2.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
