@@ -30,7 +30,7 @@ int deposit(int accountNumber, int password, int amount)
 {
     //TODO check if possible that accountNumber is of account that doesn't exist
     auto account = accounts.find(accountNumber);
-    if(account->second ->checkPassword(password)) // Check if pass is correct
+    if(account->second->checkPassword(password)) // Check if pass is correct
     {
         account->second->deposit(amount);
         return account->second->getBalance(); // successful

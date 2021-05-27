@@ -30,6 +30,9 @@ int openAccount(int accountNumber, int password, int initialAmount);
 //          -1 if failed
 //******************************************************************************
 int deposit(int accountNumber, int password, int amount);
+
+// TODO either this func or account::withdraw() needs to ensure
+//  that cannot withdraw more money than balance I think!
 int withdraw(int accountNumber, int password, int amount);
 int checkBalance(int accountNumber, int password);
 int closeAccount(int accountNumber, int password);
