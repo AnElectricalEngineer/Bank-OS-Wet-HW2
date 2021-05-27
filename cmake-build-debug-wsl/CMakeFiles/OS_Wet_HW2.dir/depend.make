@@ -4,6 +4,7 @@
 CMakeFiles/OS_Wet_HW2.dir/account.cpp.o: ../account.cpp
 CMakeFiles/OS_Wet_HW2.dir/account.cpp.o: ../account.h
 
+CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../account.h
 CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../atm.cpp
 CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../atm.h
 

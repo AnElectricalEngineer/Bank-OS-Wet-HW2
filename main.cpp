@@ -3,6 +3,7 @@
 #include "bank.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <vector>
@@ -18,13 +19,15 @@ using namespace std;
 
 // TODO look at red note page 2 bottom
 
-// Global - accounts
-map<int, account> accounts;
+// Globals
+map<int, account*> accounts{}; // Accounts. Maps account numbers to accounts.
+ofstream logfile; // Logfile
+
 
 int main(int argc, char* argv[])
 {
-    int N; // Number of ATMS in the bank
-    vector<ATMinfo> ATM_infos; // Stores serial numbers and file descriptors
+    int N{}; // Number of ATMS in the bank
+    vector<ATMinfo> ATM_infos{}; // Stores serial numbers and file descriptors
     // for atm operations
 
     // If not enough arguments, exit
@@ -58,30 +61,51 @@ int main(int argc, char* argv[])
         exit(-1);
     }
 
-    //TODO check that all arguments except first two are actually files
+    // Check that all arguments except first two are actually files
     for(int i = 2; i < argc; i++)
     {
         const char* pathName = argv[i];
-        int fd = open(pathName, O_RDONLY); //TODO close all files at end!
+        ifstream ATM_file(pathName);
 
         // If opening file failed
-        if(fd == -1)
+        if(!ATM_file.is_open())
         {
-            perror("Bad file name"); //TODO check that this is what should be
-            // printed
+            cerr << "illegal arguments" << endl; //TODO
+            // check that this is what should be printed
             exit(-1);
         }
+        ATM_file.close(); //TODO check if need to check if fails
 
         // Create a new struct for each ATM and add to collection of ATMs
-        ATMinfo atmInfo = ATMinfo{.serialNumber = -1, .fileDescriptor = fd};
+        ATMinfo atmInfo = ATMinfo{.serialNumber = i - 1, .ATMfile = pathName};
         ATM_infos.push_back(atmInfo);
     }
 
-    // Create thread for bank
-    pthread_t bankThread;
-    int threadCreateSuccess = pthread_create(&bankThread, nullptr, bankFunc,
+    // Create logfile
+    logfile.open("log.txt", ofstream::trunc);
+    if(!logfile.is_open())
+    {
+        //TODO check what to do exactly if open fails.
+        exit(-1);
+    }
+
+
+    // Create thread for taking fee from accounts
+    pthread_t feeThread{};
+    int threadCreateSuccess = pthread_create(&feeThread, nullptr, takeFee,
                                              nullptr);
     // pthread_create returns 0 on success
+    if(threadCreateSuccess)
+    {
+        perror("Error creating thread"); //TODO check that this is what
+        // should be printed
+        exit(-1);
+    }
+
+    // Create thread for printing status
+    pthread_t printingStatusThread;
+    threadCreateSuccess = pthread_create(&printingStatusThread, nullptr,
+                                         printStatus,nullptr);
     if(threadCreateSuccess)
     {
         perror("Error creating thread"); //TODO check that this is what
@@ -115,5 +139,6 @@ int main(int argc, char* argv[])
         }
     }
 
+    logfile.close();
     return 0;
 }

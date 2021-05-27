@@ -1,0 +1,2 @@
+1: New account id is 1234 with password 5678 and initial balance 9999
+Error 1: Your transaction failed - account with the same id exists

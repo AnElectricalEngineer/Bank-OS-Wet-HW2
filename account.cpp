@@ -17,3 +17,8 @@ int account::getBalance() const
 {
     return _balance;
 }
+
+bool account::checkPassword(int password) const
+{
+    return (password == this->_password);
+}
