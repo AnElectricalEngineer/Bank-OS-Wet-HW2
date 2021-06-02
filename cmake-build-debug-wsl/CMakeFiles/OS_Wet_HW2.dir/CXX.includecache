@@ -6,7 +6,13 @@
 
 #IncludeRegexTransform: 
 
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.cpp
+account.h
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
+
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
+pthread.h
+-
 
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp
 atm.h
@@ -22,5 +28,31 @@ map
 string
 -
 vector
+-
+
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
+
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp
+atm.h
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h
+account.h
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
+bank.h
+/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
+iostream
+-
+fstream
+-
+string
+-
+map
+-
+vector
+-
+sys/stat.h
+-
+fcntl.h
+-
+pthread.h
 -
 

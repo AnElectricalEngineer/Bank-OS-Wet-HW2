@@ -1,6 +1,7 @@
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
 
+#include <pthread.h>
 
 class account{
 private:
@@ -12,12 +13,19 @@ private:
     // read count. Then in atms functions, do just like slide 17. Dont forget
     // to add initialization to mutexes in constructor, initialize to unlocked.
 
+    pthread_mutex_t _readLock, _writeLock;
+    int _readerCnt;
+
 public:
     account(int accountNumber, int password, int balance);
     void deposit(int amount);
     void withdraw(int amount);
     int getBalance() const;
     bool checkPassword(int password) const;
+    void enterReader();
+    void exitReader();
+    void enterWriter();
+    void exitWriter();
 };
 
 

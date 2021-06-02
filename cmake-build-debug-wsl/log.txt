@@ -1,2 +1,3 @@
-1: New account id is 1234 with password 5678 and initial balance 9999
-Error 1: Your transaction failed - account with the same id exists
+1: New account id is 1234 with password 5678 and initial balance 0
+1: New account id is 9999 with password 9999 and initial balance 1000
+1: Transfer 700 from account 9999 to account 1234 new account balance is 300 new target account balance is 700

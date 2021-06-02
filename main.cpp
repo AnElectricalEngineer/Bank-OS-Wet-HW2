@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
         if(!ATM_file.is_open())
         {
             cerr << "illegal arguments" << endl; //TODO
-            // check that this is what should be printed
+            // check that this is what should be printed and if it works
             exit(-1);
         }
         ATM_file.close(); //TODO check if need to check if fails
@@ -81,7 +81,7 @@ int main(int argc, char* argv[])
         ATM_infos.push_back(atmInfo);
     }
 
-    // Create logfile
+    // Create logfile - overwrite content
     logfile.open("log.txt", ofstream::trunc);
     if(!logfile.is_open())
     {
@@ -139,6 +139,6 @@ int main(int argc, char* argv[])
         }
     }
 
-    logfile.close();
+    logfile.close(); // TODO check if need to check if succeeded
     return 0;
 }
