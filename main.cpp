@@ -20,8 +20,9 @@ using namespace std;
 // TODO look at red note page 2 bottom
 
 // Globals
-map<int, account*> accounts{}; // Accounts. Maps account numbers to accounts.
-ofstream logfile; // Logfile
+accounts Accounts; // Accounts. Holds mapping of account numbers to accounts.
+BankMoney bankMoney; // The balance of the bank itself
+Logfile logfile; // Logfile
 
 
 int main(int argc, char* argv[])
@@ -77,13 +78,13 @@ int main(int argc, char* argv[])
         ATM_file.close(); //TODO check if need to check if fails
 
         // Create a new struct for each ATM and add to collection of ATMs
-        ATMinfo atmInfo = ATMinfo{.serialNumber = i - 1, .ATMfile = pathName};
+        ATMinfo atmInfo = ATMinfo{i - 1, pathName};
         ATM_infos.push_back(atmInfo);
     }
 
     // Create logfile - overwrite content
-    logfile.open("log.txt", ofstream::trunc);
-    if(!logfile.is_open())
+    logfile._logfile.open("log.txt", ofstream::trunc);
+    if(!logfile._logfile.is_open())
     {
         //TODO check what to do exactly if open fails.
         exit(-1);
@@ -114,7 +115,7 @@ int main(int argc, char* argv[])
     }
 
     // Create N threads for N ATMs
-    pthread_t ATM_threads[N];
+    auto ATM_threads = new pthread_t[N];
     for(int i = 0; i < N; i++)
     {
         threadCreateSuccess = pthread_create(&ATM_threads[i], nullptr, atmFunc,
@@ -139,6 +140,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    logfile.close(); // TODO check if need to check if succeeded
+    logfile._logfile.close(); // TODO check if need to check if succeeded
+    delete[] ATM_threads;
     return 0;
 }

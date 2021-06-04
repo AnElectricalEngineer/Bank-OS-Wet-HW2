@@ -1,0 +1,9 @@
+2: New account id is 1111 with password 101 and initial balance 50
+1: New account id is 1234 with password 5678 and initial balance 0
+Error 2: Your transaction failed -  account id 1234 balance is lower than 50
+1: Account 1111 new balance is 150 after 100 $ was deposited
+Bank: commissions of 3 % were charged, the bank gained 5 $ from account 1111
+2: Account 1234 new balance is 1000 after 1000 $ was deposited
+Bank: commissions of 3 % were charged, the bank gained 30 $ from account 1234
+1: Account 1234 new balance is 920 after 50 $ was withdrew
+1: Account 1234 balance is 920

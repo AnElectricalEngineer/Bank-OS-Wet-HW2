@@ -30,6 +30,11 @@ bool account::checkPassword(int password) const
     return (password == this->_password);
 }
 
+int account::getPassword() const
+{
+    return _password;
+}
+
 void account::enterReader()
 {
     pthread_mutex_lock(&_readLock); // TODO check if sys call

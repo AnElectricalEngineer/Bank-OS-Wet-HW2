@@ -1,113 +1,155 @@
 #include "atm.h"
-#include "account.h"
+#include "bank.h"
 
 #include <fstream>
 #include <map>
+#include <unistd.h>
+
+#define ATM_OP_TIME 1 // amount of time in SECONDS that each operation takes
+#define ATM_SLEEP_TIME 100000 // amount of time in MICROSECONDS that ATM sleeps
 
 using namespace std;
 
-extern map<int, account*> accounts;
-extern ofstream logfile;
+extern accounts Accounts;
+extern Logfile logfile;
 
 int openAccount(int accountNumber, int password, int initialAmount)
 {
-    // TODO probably lock/unlock here
     // Check if account with accountNumber already exists in accounts
-    for(auto & account : accounts)
+    Accounts.enterWriter();
+    sleep(ATM_OP_TIME);
+    for(auto & account : Accounts._accounts)
     {
         if(account.first == accountNumber)
         {
+            Accounts.exitWriter();
             return -1; // fail
         }
     }
 
     //TODO delete at end!
     auto newAccount = new account(accountNumber, password, initialAmount);
-    accounts.insert({accountNumber, newAccount});
+    Accounts._accounts.insert({accountNumber, newAccount});
+    Accounts.exitWriter();
     return 0; // success
 }
 
 int deposit(int accountNumber, int password, int amount)
 {
-    auto account = accounts.find(accountNumber);
+    Accounts.enterReader();
+    auto account = Accounts._accounts.find(accountNumber);
 
     // If account with id accountNumber doesn't exist in accounts
-    if(account == accounts.end())
+    if(account == Accounts._accounts.end())
     {
+        sleep(ATM_OP_TIME);
+        Accounts.exitReader();
         return -3;
     }
 
-    if(account->second->checkPassword(password)) // Check if pass is correct
+    else if(account->second->checkPassword(password)) // Check if pass is correct
     {
+        account->second->enterWriter();
+        sleep(ATM_OP_TIME);
         account->second->deposit(amount);
-        return account->second->getBalance(); // successful
+        int balance = account->second->getBalance();
+        account->second->exitWriter();
+        Accounts.exitReader();
+        return balance; // successful
     }
 
     else
     {
+        sleep(ATM_OP_TIME);
+        Accounts.exitReader();
         return -1; // failed
     }
 }
 
 int withdraw(int accountNumber, int password, int amount)
 {
-    auto account = accounts.find(accountNumber);
+    Accounts.enterReader();
+    auto account = Accounts._accounts.find(accountNumber);
 
     // If account with id accountNumber doesn't exist in accounts
-    if(account == accounts.end())
+    if(account == Accounts._accounts.end())
     {
+        sleep(ATM_OP_TIME);
+        Accounts.exitReader();
         return -3;
     }
 
     // Check if pass is correct
-    if(account->second->checkPassword(password))
+    else if(account->second->checkPassword(password))
     {
+        account->second->enterWriter();
+        sleep(ATM_OP_TIME);
         int currentBalance = account->second->getBalance();
         if(currentBalance >= amount) // Check that balance >= amount
         {
             account->second->withdraw(amount);
-            return account->second->getBalance(); // successful
+            int balance = account->second->getBalance();
+            account->second->exitWriter();
+            Accounts.exitReader();
+            return balance; // successful
         }
         else
         {
+            account->second->exitWriter();
+            Accounts.exitReader();
             return -2; // password correct but balance too low
         }
     }
 
     else
     {
+        sleep(ATM_OP_TIME);
+        Accounts.exitReader();
         return -1; // password incorrect
     }
 }
 
 int checkBalance(int accountNumber, int password)
 {
-    auto account = accounts.find(accountNumber);
+    Accounts.enterReader();
+    auto account = Accounts._accounts.find(accountNumber);
 
     // If account with id accountNumber doesn't exist in accounts
-    if(account == accounts.end())
+    if(account == Accounts._accounts.end())
     {
+        sleep(ATM_OP_TIME);
+        Accounts.exitReader();
         return -3;
     }
 
     // Check if pass is correct
-    if(account->second->checkPassword(password))
+    else if(account->second->checkPassword(password))
     {
-        return account->second->getBalance();
+        account->second->enterReader();
+        sleep(ATM_OP_TIME);
+        int balance = account->second->getBalance();
+        account->second->exitReader();
+        Accounts.exitReader();
+        return balance;
     }
     else
     {
+        sleep(ATM_OP_TIME);
+        Accounts.exitReader();
         return -1; // wrong password
     }
 }
 
 int closeAccount(int accountNumber, int password)
 {
-    auto account = accounts.find(accountNumber);
+    Accounts.enterWriter();
+    sleep(ATM_OP_TIME);
+    auto account = Accounts._accounts.find(accountNumber);
 
     // If account with id accountNumber doesn't exist in accounts
-    if(account == accounts.end())
+    if(account == Accounts._accounts.end())
     {
+        Accounts.exitWriter();
         return -3;
     }
 
@@ -116,13 +158,15 @@ int closeAccount(int accountNumber, int password)
     {
         int balance = account->second->getBalance();
         delete account->second;
-        accounts.erase(accountNumber);
+        Accounts._accounts.erase(accountNumber);
+        Accounts.exitWriter();
         return balance;
     }
 
     // Wrong password
     else
     {
+        Accounts.exitWriter();
         return -1;
     }
 }
@@ -131,35 +175,61 @@ TransferResult transfer(int sourceAccNumber, int sourcePass, int
 targetAccNumber, int amount)
 {
     TransferResult transferResult{};
-    auto sourceAccount = accounts.find(sourceAccNumber);
+    Accounts.enterReader();
+    auto sourceAccount = Accounts._accounts.find(sourceAccNumber);
 
     // If account with id sourceAccNumber doesn't exist in accounts
-    if(sourceAccount == accounts.end())
+    if(sourceAccount == Accounts._accounts.end())
     {
+        sleep(ATM_OP_TIME);
         transferResult.result = -3; // wrong source account number
+        Accounts.exitReader();
         return transferResult;
     }
 
     // Wrong password
-    if(!sourceAccount->second->checkPassword(sourcePass))
+    else if(!sourceAccount->second->checkPassword(sourcePass))
     {
+        sleep(ATM_OP_TIME);
         transferResult.result = -1; // Wrong password for target account
+        Accounts.exitReader();
         return transferResult;
     }
 
-    auto targetAccount = accounts.find(targetAccNumber);
+    auto targetAccount = Accounts._accounts.find(targetAccNumber);
 
     // If account with id targetAccNumber doesn't exist in accounts
-    if(targetAccount == accounts.end())
+    if(targetAccount == Accounts._accounts.end())
     {
+        sleep(ATM_OP_TIME);
         transferResult.result = -4; // wrong target account number
+        Accounts.exitReader();
         return transferResult;
     }
+
+    int minAccNumber = sourceAccNumber < targetAccNumber ? sourceAccNumber :
+            targetAccNumber;
+
+    if(minAccNumber == sourceAccNumber)
+    {
+        sourceAccount->second->enterWriter();
+        targetAccount->second->enterWriter();
+    }
+    else
+    {
+        targetAccount->second->enterWriter();
+        sourceAccount->second->enterWriter();
+    }
+
+    sleep(ATM_OP_TIME);
 
     int sourceAccountBalance = sourceAccount->second->getBalance();
     if(sourceAccountBalance < amount)
     {
         transferResult.result = -2; // Not enough money in source account
+        sourceAccount->second->exitWriter();
+        targetAccount->second->exitWriter();
+        Accounts.exitReader();
         return transferResult;
     }
 
@@ -169,6 +239,9 @@ targetAccNumber, int amount)
     transferResult.sourceAccBalance = sourceAccount->second->getBalance();
     transferResult.targetAccBalance = targetAccount->second->getBalance();
 
+    sourceAccount->second->exitWriter();
+    targetAccount->second->exitWriter();
+    Accounts.exitReader();
     return transferResult;
 }
 
@@ -191,9 +264,18 @@ void* atmFunc(void* arg)
     // opened file
     while(getline(ATMfile, newLine))
     {
+        usleep(ATM_SLEEP_TIME);
+
         char command = newLine.at(0); // The command
 
-        vector<int> arguments{}; // holds all arguments
+        // TODO check if need to support blank lines in input ATM files.
+        //  currently fails.
+        vector<int> arguments{}; // holds integer representation of arguments
+        // TODO check forum for response re printing password/acc number that
+        //  starts with 0.
+        // TODO maybe use:
+        //vector<string> strArguments{}; // holds string representation of
+        // arguments
         string delimiter = " "; //TODO check if space is enough, or if need
         // other delimiters.
         size_t pos = 0;
@@ -207,45 +289,46 @@ void* atmFunc(void* arg)
         while ((pos = newLine.find(delimiter)) != string::npos) {
             token = newLine.substr(0, pos);
             arguments.push_back(std::stoi(token));
+            //strArguments.push_back(token); //TODO maybe use
             newLine.erase(0, pos + delimiter.length());
         }
 
         // Open account
         if(command == 'O')
         {
-            //TODO lock
             int openAccountTest = openAccount(
                     arguments.at(0),
                     arguments.at(1),
                     arguments.at(2));
 
+            logfile.enterWriter();
             if (openAccountTest == 0) // Successfully opened account
             {
-                logfile << ATM_id << ": New account id is " << arguments
-                        .at(0) << " with password " << arguments.at(1) <<
+                logfile._logfile << ATM_id << ": New account id is " <<
+                arguments.at(0) << " with password " << arguments.at(1) <<
                         " and initial balance " << arguments.at(2) << endl;
             }
             else // Failed to open account
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                                                  "failed - account with "
                                                  "the same id exists" << endl;
             }
+            logfile.exitWriter();
         }
-        //TODO unlock
 
         // Deposit money
         else if(command == 'D')
         {
-            // TODO lock
             int newBalance = deposit(arguments.at(0),
                                      arguments.at(1),
                                      arguments.at(2));
 
+            logfile.enterWriter();
             // If account doesn't exist
             if(newBalance == -3)
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                            "failed - account id " << arguments.at(0) <<
                                                  " does not exist" << endl;
             }
@@ -253,7 +336,7 @@ void* atmFunc(void* arg)
             // Wrong password
             else if(newBalance == -1)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed - password for account id "
                         << arguments.at(0) << " is incorrect" << endl;
             }
@@ -261,26 +344,25 @@ void* atmFunc(void* arg)
             // Successfully deposited money
             else
             {
-                logfile << ATM_id << ": Account " << arguments.at(0) <<
+                logfile._logfile << ATM_id << ": Account " << arguments.at(0) <<
                         " new balance is " << newBalance << " after " <<
                         arguments.at(2) << " $ was deposited" << endl;
             }
-
+            logfile.exitWriter();
         }
-        // TODO unlock
 
         // Withdraw money
         else if(command == 'W')
         {
-            // TODO lock
             int newBalance = withdraw(arguments.at(0),
                                      arguments.at(1),
                                      arguments.at(2));
 
+            logfile.enterWriter();
             // Wrong password
             if(newBalance == -1)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed - password for account id "
                         << arguments.at(0) << " is incorrect" << endl;
             }
@@ -288,7 +370,7 @@ void* atmFunc(void* arg)
             // Balance is lower than amount to withdraw
             else if(newBalance == -2)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed -  account id " << arguments.at(0) <<
                         " balance is lower than " << arguments.at(2) << endl;
             }
@@ -296,7 +378,7 @@ void* atmFunc(void* arg)
             // If account doesn't exist
             else if(newBalance == -3)
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                                                  "failed - account id " << arguments.at(0) <<
                         " does not exist" << endl;
             }
@@ -304,22 +386,22 @@ void* atmFunc(void* arg)
             // Successfully deposited money
             else
             {
-                logfile << ATM_id << ": Account " << arguments.at(0) <<
+                logfile._logfile << ATM_id << ": Account " << arguments.at(0) <<
                         " new balance is " << newBalance << " after " <<
                         arguments.at(2) << " $ was withdrew" << endl;
             }
+            logfile.exitWriter();
         }
-        // TODO unlock
 
         else if(command == 'B')
         {
-            // TODO lock
             int currentBalance = checkBalance(arguments.at(0), arguments.at(1));
 
+            logfile.enterWriter();
             // Wrong password
             if(currentBalance == -1)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed - password for account id "
                         << arguments.at(0) << " is incorrect" << endl;
             }
@@ -327,7 +409,7 @@ void* atmFunc(void* arg)
             // If account doesn't exist
             else if(currentBalance == -3)
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                            "failed - account id " << arguments.at(0) <<
                            " does not exist" << endl;
             }
@@ -335,22 +417,22 @@ void* atmFunc(void* arg)
             // Print balance
             else
             {
-                logfile << ATM_id << ": Account " << arguments.at(0) <<
+                logfile._logfile << ATM_id << ": Account " << arguments.at(0) <<
                         " balance is " << currentBalance << endl;
             }
+            logfile.exitWriter();
         }
-        //TODO unlock
 
         // Close account
         else if(command == 'Q')
         {
-            // TODO lock
             int endingBalance = closeAccount(arguments.at(0), arguments.at(1));
 
+            logfile.enterWriter();
             // Wrong password
             if(endingBalance == -1)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed - password for account id "
                         << arguments.at(0) << " is incorrect" << endl;
             }
@@ -358,7 +440,7 @@ void* atmFunc(void* arg)
             // If account doesn't exist
             else if(endingBalance == -3)
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                            "failed - account id " << arguments.at(0) <<
                            " does not exist" << endl;
             }
@@ -366,25 +448,23 @@ void* atmFunc(void* arg)
             // Account successfully closed
             else
             {
-                logfile << ATM_id << ": Account " << arguments.at(0) <<
+                logfile._logfile << ATM_id << ": Account " << arguments.at(0) <<
                         " is now closed. Balance was " << endingBalance << endl;
             }
+            logfile.exitWriter();
         }
-        // TODO unlock
 
         // Transfer money
         else if(command == 'T')
         {
-            // TODO lock
-
             TransferResult result = transfer(arguments.at(0), arguments.at(1),
                                   arguments.at(2), arguments.at(3));
 
-
+            logfile.enterWriter();
             // Wrong password for source account
             if(result.result == -1)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed - password for account id "
                         << arguments.at(0) << " is incorrect" << endl;
             }
@@ -392,7 +472,7 @@ void* atmFunc(void* arg)
             // Amount to transfer is more than balance in source account
             else if(result.result == -2)
             {
-                logfile << "Error " << ATM_id << ": Your transaction " <<
+                logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed -  account id " << arguments.at(0) <<
                         " balance is lower than " << arguments.at(3) << endl;
             }
@@ -400,7 +480,7 @@ void* atmFunc(void* arg)
             // If source account doesn't exist
             else if(result.result == -3)
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                                                  "failed - account id " <<
                                                  arguments.at(0) <<
                                                  " does not exist" << endl;
@@ -409,7 +489,7 @@ void* atmFunc(void* arg)
             // If source account doesn't exist
             else if(result.result == -4)
             {
-                logfile << "Error " << ATM_id << ": Your transaction "
+                logfile._logfile << "Error " << ATM_id << ": Your transaction "
                                                  "failed - account id " <<
                                                 arguments.at(2) <<
                                                 " does not exist" << endl;
@@ -420,7 +500,7 @@ void* atmFunc(void* arg)
             {
                 int sourceAccBalance = result.sourceAccBalance;
                 int targetAccBalance = result.targetAccBalance;
-                logfile << ATM_id << ": Transfer " << arguments.at(3) << " from"
+                logfile._logfile << ATM_id << ": Transfer " << arguments.at(3) << " from"
                                       " account " << arguments.at(0) << " to "
                                       "account " << arguments.at(2) << " new"
                                       " account balance is " <<
@@ -428,11 +508,11 @@ void* atmFunc(void* arg)
                                       << "balance is " << targetAccBalance <<
                                       endl;
             }
+            logfile.exitWriter();
         }
-        // TODO unlock
     }
 
     ATMfile.close(); //TODO check if need to check if succeeded
 
-    return nullptr; //TODO check
+    pthread_exit(nullptr); //TODO check
 }

@@ -67,10 +67,6 @@ int checkBalance(int accountNumber, int password);
 //******************************************************************************
 int closeAccount(int accountNumber, int password);
 
-//TODO for transfer, look at tirgul 5 slide 33 + extra questions at the end,
-// page 4, make sure that locks are always locked in same order...use min()
-// on account numbers maybe.
-
 //******************************************************************************
 // Transfers amount from the account with the number sourceAccNumber to the
 // account with the number targetAccNumber
@@ -82,8 +78,7 @@ int closeAccount(int accountNumber, int password);
 //          -4 if target account doesn't exist
 //******************************************************************************
 TransferResult transfer(int sourceAccNumber, int sourcePass, int
-targetAccNumber, int
-amount);
+targetAccNumber, int amount);
 
 void* atmFunc(void* arg);
 
