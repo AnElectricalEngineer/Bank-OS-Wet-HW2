@@ -6,29 +6,5 @@
 
 #IncludeRegexTransform: 
 
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
-pthread.h
--
-string
--
-
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.cpp
-bank.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
-cmath
--
-unistd.h
--
-iostream
--
-
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
-map
--
-string
--
-fstream
--
-account.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
 

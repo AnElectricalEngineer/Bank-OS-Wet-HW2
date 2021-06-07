@@ -362,7 +362,7 @@ void* atmFunc(void* arg)
             else if(newBalance == -2)
             {
                 logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
-                        "failed -  account id " << arguments.at(0) <<
+                        "failed - account id " << arguments.at(0) <<
                         " balance is lower than " << amount << endl;
             }
 

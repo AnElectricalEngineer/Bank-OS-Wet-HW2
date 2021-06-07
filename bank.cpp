@@ -182,7 +182,11 @@ void* takeFee(void* arg)
             pthread_exit(nullptr);
         }
         Accounts.enterReader();
-        double feePercent = ((double)(rand() % 2) + 2)/100.0;
+        //TODO check - I think bank only ever charges 2 or 3% commission, not
+        // 4! I changed from rand() % 2 to % 3 because range of a % b is
+        // [0, b-1]. But seems to always have same outputs for same file!
+        // maybe use std::uniform_int_distribution
+        double feePercent = ((double)(rand() % 3) + 2)/100.0;
         for(auto & account : Accounts._accounts)
         {
             account.second->enterWriter();
