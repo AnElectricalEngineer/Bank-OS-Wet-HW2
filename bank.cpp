@@ -115,6 +115,10 @@ void* takeFee(void* arg)
     while(true)
     {
         sleep(BANK_FEE_INTERVAL);
+
+        auto bankThreadsLock = (pthread_mutex_t*)arg;
+        if(pthread_mutex_trylock(bankThreadsLock)) pthread_exit(nullptr);
+
         Accounts.enterReader();
         double feePercent = ((double)(rand() % 2) + 2)/100.0;
         for(auto & account : Accounts._accounts)
@@ -142,6 +146,8 @@ void* printStatus(void* arg)
     while(true)
     {
         usleep(STATUS_PRINT_INTERVAL);
+        auto bankThreadsLock = (pthread_mutex_t*)arg;
+        if(pthread_mutex_trylock(bankThreadsLock)) pthread_exit(nullptr);
         printf("\033[2J");
         printf("\033[1;1H");
         cout << "Current Bank Status" << endl;
@@ -149,9 +155,9 @@ void* printStatus(void* arg)
         for(auto & account : Accounts._accounts)
         {
             account.second->enterReader();
-            int accountNumber = account.first;
+            string accountNumber = account.first;
             int balance = account.second->getBalance();
-            int password = account.second->getPassword();
+            string password = account.second->getPassword();
             account.second->exitReader();
             cout << "Account " << accountNumber << ": Balance - " << balance
             << " $ , Account Password - " << password << endl;

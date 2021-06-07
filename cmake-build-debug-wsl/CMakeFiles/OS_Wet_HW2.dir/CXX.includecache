@@ -9,17 +9,7 @@
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
 pthread.h
 -
-
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp
-atm.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h
-bank.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
-fstream
--
-map
--
-unistd.h
+string
 -
 
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h
@@ -40,6 +30,8 @@ iostream
 
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
 map
+-
+string
 -
 fstream
 -
@@ -62,10 +54,6 @@ string
 map
 -
 vector
--
-sys/stat.h
--
-fcntl.h
 -
 pthread.h
 -

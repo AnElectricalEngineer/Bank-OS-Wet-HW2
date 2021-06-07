@@ -1,8 +1,7 @@
 #include "account.h"
 
-account::account(int accountNumber, int password, int balance):
-_accountNumber(accountNumber), _password(password), _balance(balance),
-_readerCnt(0)
+account::account(string password, int balance):_password(password),
+_balance(balance), _readerCnt(0)
 {
     // TODO check if need to check if succeeded like syscall
     // TODO check if need to destroy in destructor
@@ -25,12 +24,12 @@ int account::getBalance() const
     return _balance;
 }
 
-bool account::checkPassword(int password) const
+bool account::checkPassword(string password) const
 {
-    return (password == this->_password);
+    return (password == _password);
 }
 
-int account::getPassword() const
+string account::getPassword() const
 {
     return _password;
 }

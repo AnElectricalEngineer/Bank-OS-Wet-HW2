@@ -13,28 +13,26 @@ using namespace std;
 extern accounts Accounts;
 extern Logfile logfile;
 
-int openAccount(int accountNumber, int password, int initialAmount)
+int openAccount(string accountNumber, string password, int
+initialAmount)
 {
     // Check if account with accountNumber already exists in accounts
     Accounts.enterWriter();
     sleep(ATM_OP_TIME);
-    for(auto & account : Accounts._accounts)
+    // Check if account with same account number already exists
+    if(Accounts._accounts.find(accountNumber) != Accounts._accounts.end())
     {
-        if(account.first == accountNumber)
-        {
-            Accounts.exitWriter();
-            return -1; // fail
-        }
+        Accounts.exitWriter();
+        return -1; // fail
     }
 
-    //TODO delete at end!
-    auto newAccount = new account(accountNumber, password, initialAmount);
+    auto newAccount = new account(password, initialAmount);
     Accounts._accounts.insert({accountNumber, newAccount});
     Accounts.exitWriter();
     return 0; // success
 }
 
-int deposit(int accountNumber, int password, int amount)
+int deposit(string accountNumber, string password, int amount)
 {
     Accounts.enterReader();
     auto account = Accounts._accounts.find(accountNumber);
@@ -66,7 +64,7 @@ int deposit(int accountNumber, int password, int amount)
     }
 }
 
-int withdraw(int accountNumber, int password, int amount)
+int withdraw(string accountNumber, string password, int amount)
 {
     Accounts.enterReader();
     auto account = Accounts._accounts.find(accountNumber);
@@ -109,7 +107,7 @@ int withdraw(int accountNumber, int password, int amount)
     }
 }
 
-int checkBalance(int accountNumber, int password)
+int checkBalance(string accountNumber, string password)
 {
     Accounts.enterReader();
     auto account = Accounts._accounts.find(accountNumber);
@@ -140,7 +138,7 @@ int checkBalance(int accountNumber, int password)
     }
 }
 
-int closeAccount(int accountNumber, int password)
+int closeAccount(string accountNumber, string password)
 {
     Accounts.enterWriter();
     sleep(ATM_OP_TIME);
@@ -171,7 +169,7 @@ int closeAccount(int accountNumber, int password)
     }
 }
 
-TransferResult transfer(int sourceAccNumber, int sourcePass, int
+TransferResult transfer(string sourceAccNumber, string sourcePass, string
 targetAccNumber, int amount)
 {
     TransferResult transferResult{};
@@ -207,7 +205,7 @@ targetAccNumber, int amount)
         return transferResult;
     }
 
-    int minAccNumber = sourceAccNumber < targetAccNumber ? sourceAccNumber :
+    string minAccNumber = sourceAccNumber < targetAccNumber ? sourceAccNumber :
             targetAccNumber;
 
     if(minAccNumber == sourceAccNumber)
@@ -270,12 +268,7 @@ void* atmFunc(void* arg)
 
         // TODO check if need to support blank lines in input ATM files.
         //  currently fails.
-        vector<int> arguments{}; // holds integer representation of arguments
-        // TODO check forum for response re printing password/acc number that
-        //  starts with 0.
-        // TODO maybe use:
-        //vector<string> strArguments{}; // holds string representation of
-        // arguments
+        vector<string> arguments{}; // holds string representation of arguments
         string delimiter = " "; //TODO check if space is enough, or if need
         // other delimiters.
         size_t pos = 0;
@@ -288,7 +281,7 @@ void* atmFunc(void* arg)
         // Get arguments from each line of user input file
         while ((pos = newLine.find(delimiter)) != string::npos) {
             token = newLine.substr(0, pos);
-            arguments.push_back(std::stoi(token));
+            arguments.push_back(token);
             //strArguments.push_back(token); //TODO maybe use
             newLine.erase(0, pos + delimiter.length());
         }
@@ -296,17 +289,18 @@ void* atmFunc(void* arg)
         // Open account
         if(command == 'O')
         {
+            int initialAmount = std::stoi(arguments.at(2));
             int openAccountTest = openAccount(
                     arguments.at(0),
                     arguments.at(1),
-                    arguments.at(2));
+                    initialAmount);
 
             logfile.enterWriter();
             if (openAccountTest == 0) // Successfully opened account
             {
                 logfile._logfile << ATM_id << ": New account id is " <<
                 arguments.at(0) << " with password " << arguments.at(1) <<
-                        " and initial balance " << arguments.at(2) << endl;
+                        " and initial balance " << initialAmount << endl;
             }
             else // Failed to open account
             {
@@ -320,9 +314,10 @@ void* atmFunc(void* arg)
         // Deposit money
         else if(command == 'D')
         {
+            int amount = std::stoi(arguments.at(2));
             int newBalance = deposit(arguments.at(0),
                                      arguments.at(1),
-                                     arguments.at(2));
+                                     amount);
 
             logfile.enterWriter();
             // If account doesn't exist
@@ -346,7 +341,7 @@ void* atmFunc(void* arg)
             {
                 logfile._logfile << ATM_id << ": Account " << arguments.at(0) <<
                         " new balance is " << newBalance << " after " <<
-                        arguments.at(2) << " $ was deposited" << endl;
+                        amount << " $ was deposited" << endl;
             }
             logfile.exitWriter();
         }
@@ -354,9 +349,10 @@ void* atmFunc(void* arg)
         // Withdraw money
         else if(command == 'W')
         {
+            int amount = std::stoi(arguments.at(2));
             int newBalance = withdraw(arguments.at(0),
                                      arguments.at(1),
-                                     arguments.at(2));
+                                     amount);
 
             logfile.enterWriter();
             // Wrong password
@@ -372,7 +368,7 @@ void* atmFunc(void* arg)
             {
                 logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed -  account id " << arguments.at(0) <<
-                        " balance is lower than " << arguments.at(2) << endl;
+                        " balance is lower than " << amount << endl;
             }
 
             // If account doesn't exist
@@ -380,7 +376,7 @@ void* atmFunc(void* arg)
             {
                 logfile._logfile << "Error " << ATM_id << ": Your transaction "
                                                  "failed - account id " << arguments.at(0) <<
-                        " does not exist" << endl;
+                                                " does not exist" << endl;
             }
 
             // Successfully deposited money
@@ -388,7 +384,7 @@ void* atmFunc(void* arg)
             {
                 logfile._logfile << ATM_id << ": Account " << arguments.at(0) <<
                         " new balance is " << newBalance << " after " <<
-                        arguments.at(2) << " $ was withdrew" << endl;
+                        amount << " $ was withdrew" << endl;
             }
             logfile.exitWriter();
         }
@@ -457,8 +453,9 @@ void* atmFunc(void* arg)
         // Transfer money
         else if(command == 'T')
         {
+            int amountToTransfer = std::stoi(arguments.at(3));
             TransferResult result = transfer(arguments.at(0), arguments.at(1),
-                                  arguments.at(2), arguments.at(3));
+                                  arguments.at(2), amountToTransfer);
 
             logfile.enterWriter();
             // Wrong password for source account
@@ -474,7 +471,7 @@ void* atmFunc(void* arg)
             {
                 logfile._logfile << "Error " << ATM_id << ": Your transaction " <<
                         "failed -  account id " << arguments.at(0) <<
-                        " balance is lower than " << arguments.at(3) << endl;
+                        " balance is lower than " << amountToTransfer << endl;
             }
 
             // If source account doesn't exist
@@ -500,7 +497,8 @@ void* atmFunc(void* arg)
             {
                 int sourceAccBalance = result.sourceAccBalance;
                 int targetAccBalance = result.targetAccBalance;
-                logfile._logfile << ATM_id << ": Transfer " << arguments.at(3) << " from"
+                logfile._logfile << ATM_id << ": Transfer " <<
+                                        amountToTransfer << " from"
                                       " account " << arguments.at(0) << " to "
                                       "account " << arguments.at(2) << " new"
                                       " account balance is " <<

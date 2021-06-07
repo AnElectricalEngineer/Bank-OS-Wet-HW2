@@ -2,6 +2,7 @@
 #define _BANK_H
 
 #include <map>
+#include <string>
 #include <fstream>
 
 #include "account.h"
@@ -14,7 +15,7 @@ private:
     pthread_mutex_t _readLock, _writeLock;
     int _readerCnt;
 public:
-    map<int, account*> _accounts{};
+    map<string, account*> _accounts{};
 
     accounts();
     ~accounts();

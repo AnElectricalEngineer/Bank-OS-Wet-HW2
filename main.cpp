@@ -7,8 +7,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <pthread.h>
 
 using namespace std;
@@ -90,11 +88,15 @@ int main(int argc, char* argv[])
         exit(-1);
     }
 
+    // Lock that remains locked while ATMs have tasks
+    pthread_mutex_t bankThreadsLock; // TODO check sys calls
+    pthread_mutex_init(&bankThreadsLock, nullptr);
+    pthread_mutex_lock(&bankThreadsLock);
 
     // Create thread for taking fee from accounts
     pthread_t feeThread{};
     int threadCreateSuccess = pthread_create(&feeThread, nullptr, takeFee,
-                                             nullptr);
+                                             (void*)&bankThreadsLock);
     // pthread_create returns 0 on success
     if(threadCreateSuccess)
     {
@@ -104,9 +106,9 @@ int main(int argc, char* argv[])
     }
 
     // Create thread for printing status
-    pthread_t printingStatusThread;
+    pthread_t printingStatusThread{};
     threadCreateSuccess = pthread_create(&printingStatusThread, nullptr,
-                                         printStatus,nullptr);
+                                         printStatus,(void*)&bankThreadsLock);
     if(threadCreateSuccess)
     {
         perror("Error creating thread"); //TODO check that this is what
@@ -140,6 +142,11 @@ int main(int argc, char* argv[])
         }
     }
 
+    // Notify bank threads that all ATM tasks are done
+    pthread_mutex_unlock(&bankThreadsLock); //TODO check sys calls
+    pthread_join(feeThread, nullptr);
+    pthread_join(printingStatusThread, nullptr);
+    pthread_mutex_destroy(&bankThreadsLock);
     logfile._logfile.close(); // TODO check if need to check if succeeded
     delete[] ATM_threads;
     return 0;

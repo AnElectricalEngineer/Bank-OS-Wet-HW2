@@ -30,7 +30,8 @@ typedef struct
 // Returns: 0 if succeeded
 //          -1 if failed
 //******************************************************************************
-int openAccount(int accountNumber, int password, int initialAmount);
+int openAccount(string accountNumber, string password, int
+initialAmount);
 
 //******************************************************************************
 // Deposits amount into the account with the number accountNumber
@@ -38,7 +39,7 @@ int openAccount(int accountNumber, int password, int initialAmount);
 //          -1 if failed
 //          -3 if account doesn't exist
 //******************************************************************************
-int deposit(int accountNumber, int password, int amount);
+int deposit(string accountNumber, string password, int amount);
 
 // TODO either this func or account::withdraw() needs to ensure
 //  that cannot withdraw more money than balance I think!
@@ -49,7 +50,7 @@ int deposit(int accountNumber, int password, int amount);
 //          -2 if balance < amount to withdraw
 //          -3 if account doesn't exist
 //******************************************************************************
-int withdraw(int accountNumber, int password, int amount);
+int withdraw(string accountNumber, string password, int amount);
 
 //******************************************************************************
 // Checks the balance of the account with the number accountNumber
@@ -57,7 +58,7 @@ int withdraw(int accountNumber, int password, int amount);
 //          -1 if wrong password entered
 //          -3 if account doesn't exist
 //******************************************************************************
-int checkBalance(int accountNumber, int password);
+int checkBalance(string accountNumber, string password);
 
 //******************************************************************************
 // Closes the account with the number accountNumber
@@ -65,7 +66,7 @@ int checkBalance(int accountNumber, int password);
 //          -1 if wrong password entered
 //          -3 if account doesn't exist
 //******************************************************************************
-int closeAccount(int accountNumber, int password);
+int closeAccount(string accountNumber, string password);
 
 //******************************************************************************
 // Transfers amount from the account with the number sourceAccNumber to the
@@ -77,7 +78,7 @@ int closeAccount(int accountNumber, int password);
 //          -3 if source account doesn't exist
 //          -4 if target account doesn't exist
 //******************************************************************************
-TransferResult transfer(int sourceAccNumber, int sourcePass, int
+TransferResult transfer(string sourceAccNumber, string sourcePass, string
 targetAccNumber, int amount);
 
 void* atmFunc(void* arg);
