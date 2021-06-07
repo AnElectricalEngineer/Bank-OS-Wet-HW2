@@ -8,10 +8,9 @@ using namespace std;
 
 typedef struct
 {
-    const int serialNumber; //TODO check if int or something else, check if
-    // starts from 1, here we assumed starts from 1
+    const int serialNumber;
     const string ATMfile;
-} ATMinfo, *pATMinfo;
+} ATMinfo;
 
 // Object that holds information about transfer
 typedef struct
@@ -19,11 +18,7 @@ typedef struct
     int result;
     int sourceAccBalance;
     int targetAccBalance;
-} TransferResult, *pTransferResult;
-
-//TODO for open account/close account: I think need to lock ENTIRE ACCOUNT
-// data structure or maybe each individual lock, because while we are
-// modifying data structure...critical section.
+} TransferResult;
 
 //******************************************************************************
 // Creates a new account and adds it to the collection of accounts.
@@ -41,8 +36,6 @@ initialAmount);
 //******************************************************************************
 int deposit(string accountNumber, string password, int amount);
 
-// TODO either this func or account::withdraw() needs to ensure
-//  that cannot withdraw more money than balance I think!
 //******************************************************************************
 // Withdraws amount from the account with the number accountNumber
 // Returns: new account balance if succeeded

@@ -3,10 +3,17 @@
 account::account(string password, int balance):_password(password),
 _balance(balance), _readerCnt(0)
 {
-    // TODO check if need to check if succeeded like syscall
     // TODO check if need to destroy in destructor
-    pthread_mutex_init(&_readLock, nullptr);
-    pthread_mutex_init(&_writeLock, nullptr);
+    if(pthread_mutex_init(&_readLock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+    if(pthread_mutex_init(&_writeLock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void account::deposit(int amount)
@@ -36,32 +43,64 @@ string account::getPassword() const
 
 void account::enterReader()
 {
-    pthread_mutex_lock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
     _readerCnt++;
     if(_readerCnt == 1)
     {
-        pthread_mutex_lock(&_writeLock); // TODO check if sys call
+        if(pthread_mutex_lock(&_writeLock) != 0)
+        {
+            perror("Error");
+            exit(-1);
+        }
     }
-    pthread_mutex_unlock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_unlock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void account::exitReader()
 {
-    pthread_mutex_lock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
     _readerCnt--;
     if(_readerCnt == 0)
     {
-        pthread_mutex_unlock(&_writeLock); // TODO check if sys call
+        if(pthread_mutex_unlock(&_writeLock) != 0)
+        {
+            perror("Error");
+            exit(-1);
+        }
     }
-    pthread_mutex_unlock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_unlock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void account::enterWriter()
 {
-    pthread_mutex_lock(&_writeLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_writeLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void account::exitWriter()
 {
-    pthread_mutex_unlock(&_writeLock); // TODO check if sys call
+    if(pthread_mutex_unlock(&_writeLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }

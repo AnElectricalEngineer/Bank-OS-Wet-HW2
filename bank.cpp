@@ -16,16 +16,18 @@ extern Logfile logfile;
 
 accounts::accounts():_readerCnt(0)
 {
-    // TODO need to check if succeeded like syscall - if failed - print to std
-    // error and exit(-1)
-    // TODO check if need to destroy in destructor
-    pthread_mutex_init(&_readLock, nullptr);
-    pthread_mutex_init(&_writeLock, nullptr);
+    if(pthread_mutex_init(&_readLock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+    if(pthread_mutex_init(&_writeLock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
-//TODO check that necessary (solves one valgrind problem) and correct. Check
-// when destructor of global var is called. fix possibly lost errors from
-// valgrind (maybe pthread exit somehow from bank threads).
 accounts::~accounts()
 {
     for (auto & account : Accounts._accounts)
@@ -36,58 +38,103 @@ accounts::~accounts()
 
 void accounts::enterReader()
 {
-    pthread_mutex_lock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
     _readerCnt++;
     if(_readerCnt == 1)
     {
-        pthread_mutex_lock(&_writeLock); // TODO check if sys call
+        if(pthread_mutex_lock(&_writeLock) != 0)
+        {
+            perror("Error");
+            exit(-1);
+        }
     }
-    pthread_mutex_unlock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_unlock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void accounts::exitReader()
 {
-    pthread_mutex_lock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
     _readerCnt--;
     if(_readerCnt == 0)
     {
-        pthread_mutex_unlock(&_writeLock); // TODO check if sys call
+        if(pthread_mutex_unlock(&_writeLock) != 0)
+        {
+            perror("Error");
+            exit(-1);
+        }
     }
-    pthread_mutex_unlock(&_readLock); // TODO check if sys call
+    if(pthread_mutex_unlock(&_readLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void accounts::enterWriter()
 {
-    pthread_mutex_lock(&_writeLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_writeLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void accounts::exitWriter()
 {
-    pthread_mutex_unlock(&_writeLock); // TODO check if sys call
-
+    if(pthread_mutex_unlock(&_writeLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 Logfile::Logfile()
 {
-    pthread_mutex_init(&_writeLock, nullptr);
+    if(pthread_mutex_init(&_writeLock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void Logfile::enterWriter()
 {
-    pthread_mutex_lock(&_writeLock); // TODO check if sys call
+    if(pthread_mutex_lock(&_writeLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void Logfile::exitWriter()
 {
-    pthread_mutex_unlock(&_writeLock); // TODO check if sys call
-
+    if(pthread_mutex_unlock(&_writeLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 BankMoney::BankMoney():_bankBalance(0)
 {
-    // TODO check if need to check if succeeded like syscall
     // TODO check if need to destroy in destructor
-    pthread_mutex_init(&_lock, nullptr);
+    if(pthread_mutex_init(&_lock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 unsigned int BankMoney::getBankBalance() const
@@ -102,12 +149,20 @@ void BankMoney::addAmount(int amount)
 
 void BankMoney::lockBankBalance()
 {
-    pthread_mutex_lock(&_lock); // TODO check if sys call
+    if(pthread_mutex_lock(&_lock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void BankMoney::unlockBankBalance()
 {
-    pthread_mutex_unlock(&_lock); // TODO check if sys call
+    if(pthread_mutex_unlock(&_lock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 }
 
 void* takeFee(void* arg)
@@ -116,9 +171,17 @@ void* takeFee(void* arg)
     {
         sleep(BANK_FEE_INTERVAL);
 
+        // Check if all ATMs have finished their tasks
         auto bankThreadsLock = (pthread_mutex_t*)arg;
-        if(pthread_mutex_trylock(bankThreadsLock)) pthread_exit(nullptr);
-
+        if (!pthread_mutex_trylock(bankThreadsLock))
+        {
+            if(pthread_mutex_unlock(bankThreadsLock) != 0)
+            {
+                perror("Error");
+                exit(-1);
+            }
+            pthread_exit(nullptr);
+        }
         Accounts.enterReader();
         double feePercent = ((double)(rand() % 2) + 2)/100.0;
         for(auto & account : Accounts._accounts)
@@ -146,8 +209,18 @@ void* printStatus(void* arg)
     while(true)
     {
         usleep(STATUS_PRINT_INTERVAL);
+
+        // Check if all ATMs have finished their tasks
         auto bankThreadsLock = (pthread_mutex_t*)arg;
-        if(pthread_mutex_trylock(bankThreadsLock)) pthread_exit(nullptr);
+        if(!pthread_mutex_trylock(bankThreadsLock))
+        {
+            if(pthread_mutex_unlock(bankThreadsLock) != 0)
+            {
+                perror("Error");
+                exit(-1);
+            }
+            pthread_exit(nullptr);
+        }
         printf("\033[2J");
         printf("\033[1;1H");
         cout << "Current Bank Status" << endl;

@@ -11,12 +11,6 @@
 
 using namespace std;
 
-/*
- * //TODO maybe add description
- */
-
-// TODO look at red note page 2 bottom
-
 // Globals
 accounts Accounts; // Accounts. Holds mapping of account numbers to accounts.
 BankMoney bankMoney; // The balance of the bank itself
@@ -69,11 +63,10 @@ int main(int argc, char* argv[])
         // If opening file failed
         if(!ATM_file.is_open())
         {
-            cerr << "illegal arguments" << endl; //TODO
-            // check that this is what should be printed and if it works
+            cerr << "illegal arguments" << endl;
             exit(-1);
         }
-        ATM_file.close(); //TODO check if need to check if fails
+        ATM_file.close();
 
         // Create a new struct for each ATM and add to collection of ATMs
         ATMinfo atmInfo = ATMinfo{i - 1, pathName};
@@ -84,24 +77,33 @@ int main(int argc, char* argv[])
     logfile._logfile.open("log.txt", ofstream::trunc);
     if(!logfile._logfile.is_open())
     {
-        //TODO check what to do exactly if open fails.
+        cerr << "Error creating logfile" << endl;
         exit(-1);
     }
 
     // Lock that remains locked while ATMs have tasks
-    pthread_mutex_t bankThreadsLock; // TODO check sys calls
-    pthread_mutex_init(&bankThreadsLock, nullptr);
-    pthread_mutex_lock(&bankThreadsLock);
+    pthread_mutex_t bankThreadsLock;
+
+    // Returns 0 if successful
+    if(pthread_mutex_init(&bankThreadsLock, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+    if(pthread_mutex_lock(&bankThreadsLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
 
     // Create thread for taking fee from accounts
     pthread_t feeThread{};
     int threadCreateSuccess = pthread_create(&feeThread, nullptr, takeFee,
                                              (void*)&bankThreadsLock);
     // pthread_create returns 0 on success
-    if(threadCreateSuccess)
+    if(threadCreateSuccess != 0)
     {
-        perror("Error creating thread"); //TODO check that this is what
-        // should be printed
+        perror("Error");
         exit(-1);
     }
 
@@ -109,10 +111,9 @@ int main(int argc, char* argv[])
     pthread_t printingStatusThread{};
     threadCreateSuccess = pthread_create(&printingStatusThread, nullptr,
                                          printStatus,(void*)&bankThreadsLock);
-    if(threadCreateSuccess)
+    if(threadCreateSuccess != 0)
     {
-        perror("Error creating thread"); //TODO check that this is what
-        // should be printed
+        perror("Error");
         exit(-1);
     }
 
@@ -122,10 +123,9 @@ int main(int argc, char* argv[])
     {
         threadCreateSuccess = pthread_create(&ATM_threads[i], nullptr, atmFunc,
                                        (void*)&ATM_infos.at(i));
-        if(threadCreateSuccess)
+        if(threadCreateSuccess != 0)
         {
-            perror("Error creating thread"); //TODO check that this is what
-            // should be printed
+            perror("Error");
             exit(-1);
         }
     }
@@ -134,20 +134,36 @@ int main(int argc, char* argv[])
     {
         // pthread_join returns 0 on success
         int threadJoinSuccess = pthread_join(ATM_threads[i], nullptr);
-        if(threadJoinSuccess)
+        if(threadJoinSuccess != 0)
         {
-            perror("Error joining with thread"); //TODO check that this is what
-            // should be printed
+            perror("Error");
             exit(-1);
         }
     }
 
     // Notify bank threads that all ATM tasks are done
-    pthread_mutex_unlock(&bankThreadsLock); //TODO check sys calls
-    pthread_join(feeThread, nullptr);
-    pthread_join(printingStatusThread, nullptr);
-    pthread_mutex_destroy(&bankThreadsLock);
-    logfile._logfile.close(); // TODO check if need to check if succeeded
+    if(pthread_mutex_unlock(&bankThreadsLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+    if(pthread_join(feeThread, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+    if(pthread_join(printingStatusThread, nullptr) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+
+    if(pthread_mutex_destroy(&bankThreadsLock) != 0)
+    {
+        perror("Error");
+        exit(-1);
+    }
+    logfile._logfile.close();
     delete[] ATM_threads;
     return 0;
 }

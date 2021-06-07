@@ -242,9 +242,7 @@ targetAccNumber, int amount)
     Accounts.exitReader();
     return transferResult;
 }
-
-// TODO figure out maybe problem with TEST_THIS_CASE.txt test case - extra
-//  lines at end.
+// Main function that each ATM thread runs
 void* atmFunc(void* arg)
 {
     auto atMinfo = (ATMinfo*)arg;
@@ -254,7 +252,6 @@ void* atmFunc(void* arg)
 
     if(!ATMfile.is_open())
     {
-        //TODO check if works, check if it fails, reason is written to to errno
         perror("Couldn't open file: ");
         exit(-1);
     }
@@ -262,15 +259,14 @@ void* atmFunc(void* arg)
     // opened file
     while(getline(ATMfile, newLine))
     {
+        if(newLine.empty())   continue; // Ignore empty lines in ATM task files
+
         usleep(ATM_SLEEP_TIME);
 
         char command = newLine.at(0); // The command
-
-        // TODO check if need to support blank lines in input ATM files.
-        //  currently fails.
         vector<string> arguments{}; // holds string representation of arguments
         string delimiter = " "; //TODO check if space is enough, or if need
-        // other delimiters.
+        // other delimiters. Asked on forum.
         size_t pos = 0;
         string token;
         newLine.erase(0, 2); // delete the command character and space after it
@@ -282,7 +278,6 @@ void* atmFunc(void* arg)
         while ((pos = newLine.find(delimiter)) != string::npos) {
             token = newLine.substr(0, pos);
             arguments.push_back(token);
-            //strArguments.push_back(token); //TODO maybe use
             newLine.erase(0, pos + delimiter.length());
         }
 
@@ -509,8 +504,6 @@ void* atmFunc(void* arg)
             logfile.exitWriter();
         }
     }
-
-    ATMfile.close(); //TODO check if need to check if succeeded
-
-    pthread_exit(nullptr); //TODO check
+    ATMfile.close();
+    pthread_exit(nullptr);
 }
