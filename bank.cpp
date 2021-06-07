@@ -129,7 +129,6 @@ void Logfile::exitWriter()
 
 BankMoney::BankMoney():_bankBalance(0)
 {
-    // TODO check if need to destroy in destructor
     if(pthread_mutex_init(&_lock, nullptr) != 0)
     {
         perror("Error");

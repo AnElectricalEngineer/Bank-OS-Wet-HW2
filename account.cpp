@@ -3,7 +3,6 @@
 account::account(string password, int balance):_password(password),
 _balance(balance), _readerCnt(0)
 {
-    // TODO check if need to destroy in destructor
     if(pthread_mutex_init(&_readLock, nullptr) != 0)
     {
         perror("Error");
