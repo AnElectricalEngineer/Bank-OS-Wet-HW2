@@ -12,24 +12,6 @@ pthread.h
 string
 -
 
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.cpp
-atm.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h
-bank.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
-fstream
--
-map
--
-unistd.h
--
-
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h
-string
--
-vector
--
-
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.cpp
 bank.h
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
@@ -39,6 +21,8 @@ unistd.h
 -
 iostream
 -
+random
+-
 
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
 map
@@ -49,24 +33,4 @@ fstream
 -
 account.h
 /mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
-
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/main.cpp
-atm.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/atm.h
-account.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/account.h
-bank.h
-/mnt/d/Technion/Operating Systems Wet Homework/OS-Wet-HW2/bank.h
-iostream
--
-fstream
--
-string
--
-map
--
-vector
--
-pthread.h
--
 

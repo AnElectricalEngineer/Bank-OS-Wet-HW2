@@ -3,6 +3,7 @@
 #include <cmath>
 #include <unistd.h>
 #include <iostream>
+#include <random>
 
 #define BANK_FEE_INTERVAL 3 // Time in seconds between when bank takes fees
 // Time in MICROSECONDS between when the status is printed
@@ -166,6 +167,10 @@ void BankMoney::unlockBankBalance()
 
 void* takeFee(void* arg)
 {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(2, 4);
+
     while(true)
     {
         sleep(BANK_FEE_INTERVAL);
@@ -182,11 +187,9 @@ void* takeFee(void* arg)
             pthread_exit(nullptr);
         }
         Accounts.enterReader();
-        //TODO check - I think bank only ever charges 2 or 3% commission, not
-        // 4! I changed from rand() % 2 to % 3 because range of a % b is
-        // [0, b-1]. But seems to always have same outputs for same file!
-        // maybe use std::uniform_int_distribution
-        double feePercent = ((double)(rand() % 3) + 2)/100.0;
+
+        double feePercent = (double)distrib(gen)/100.0;
+
         for(auto & account : Accounts._accounts)
         {
             account.second->enterWriter();
