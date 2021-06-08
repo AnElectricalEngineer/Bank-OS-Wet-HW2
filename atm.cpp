@@ -265,8 +265,7 @@ void* atmFunc(void* arg)
 
         char command = newLine.at(0); // The command
         vector<string> arguments{}; // holds string representation of arguments
-        string delimiter = " "; //TODO check if space is enough, or if need
-        // other delimiters. Asked on forum.
+        string delimiter = " ";
         size_t pos = 0;
         string token;
         newLine.erase(0, 2); // delete the command character and space after it

@@ -9,7 +9,9 @@ CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../atm.cpp
 CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../atm.h
 CMakeFiles/OS_Wet_HW2.dir/atm.cpp.o: ../bank.h
 
+CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o: ../account.h
 CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o: ../bank.cpp
+CMakeFiles/OS_Wet_HW2.dir/bank.cpp.o: ../bank.h
 
 CMakeFiles/OS_Wet_HW2.dir/main.cpp.o: ../account.h
 CMakeFiles/OS_Wet_HW2.dir/main.cpp.o: ../atm.h

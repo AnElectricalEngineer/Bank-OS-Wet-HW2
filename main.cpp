@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     // for atm operations
 
     // If not enough arguments, exit
-    if(argc < 3)    //TODO maybe 2 is ok
+    if(argc < 3)
     {
         cerr << "illegal arguments\n";
         exit(-1);
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     }
 
     // If not enough ATMs, exit
-    if(N < 1) // TODO check if 0 ATMs is allowed, or if 1 is the minimum
+    if(N < 1)
     {
         cerr << "illegal arguments\n";
         exit(-1);
