@@ -30,3 +30,5 @@
 *.exe
 *.out
 *.app
+cmake-build-debug-wsl/log.txt
+cmake-build-debug-wsl/Testing/Temporary/LastTest.log
